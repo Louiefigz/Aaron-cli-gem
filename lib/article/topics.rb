@@ -16,7 +16,8 @@ class FunnyArticle::Topics
   def initialize(description, headline)
     hash[headline]= description
     @descriptions = []
-    @headlines = []
+    # @headlines = []
+    article
   end 
 
   def self.print_all_topics
@@ -26,8 +27,10 @@ class FunnyArticle::Topics
   end
 
   def self.all_hash
-    self.scrape_details
-    @@collection  
+    # binding.pry
+    scrape_details
+    # @@collection 
+    @@articles 
   end 
 
   def self.intake(puts_info)
@@ -35,38 +38,6 @@ class FunnyArticle::Topics
       end_now
     end
     @@correct_hash = @@list[puts_info.to_i - 1]
-  end
-
-  def self.yield_helper_2
-    doc = Nokogiri::HTML(open(@@correct_hash.values[0]))
-    scrape = doc.css('.large-thing')
-    scrape.css('h2').each do |h|
-     
-      yield h.text.strip  
-    end
-  end
-
-
-  def self.yield_helper_3
-    doc = Nokogiri::HTML(open(@@correct_hash.values[0]))
-    scrape = doc.css('.large-thing')
-    scrape.css('.desc').each  do |d|
-      yield d.text.strip  
-    end
-  end
-
-  def self.scrape_details
-    headers =[]
-    descriptions=[]
-    @@collection = {}
-    yield_helper_2{|h| headers << h}
-    yield_helper_3{|d| descriptions << d}
-
-    counter = 0
-    while counter < headers.count
-      @@collection[headers[counter]] = descriptions[counter]
-      counter +=1
-    end
   end
 
   def self.intake_article(puts_info)
@@ -84,12 +55,28 @@ class FunnyArticle::Topics
     new_doc.css('.content-text p').text
     end 
   end
-end   
+  
 
   def end_now
     puts "GoodBye!!!" 
     exit
   end 
 
+public
+  def self.scrape_details
+  @@articles = []
+  doc = Nokogiri::HTML(open(@@correct_hash.values[0]))
+    scrape = doc.css('.large-thing')
+    scrape.css('.inner').each do |div|
+      @@article = {}
+      header = div.css("h2")
+      description = div.css('.desc')
+      @@article["header"] = header.text.strip
+      @@article["description"] = description.text.strip
+      @@articles << @@article
+      @@articles
+      # binding.pry
+    end
+  end 
 
-
+end 

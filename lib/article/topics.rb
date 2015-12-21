@@ -13,19 +13,12 @@ class FunnyArticle::Topics
     {"after birth" => 'http://www.theonion.com/section/after-birth'}]
 
 
-  def initialize(description, headline)
-    # hash[headline]= description
-    # @descriptions = []
-    # article
+  def initialize
   end 
 
   def self.list
     @@list
   end
-
-  def self.all_hash
-    scrape_details
-  end 
 
   def self.select_hash(puts_info)
     @@correct_hash = @@list[puts_info.to_i - 1]

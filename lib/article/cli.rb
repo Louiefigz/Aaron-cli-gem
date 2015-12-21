@@ -55,7 +55,7 @@ class FunnyArticle::CLI
   def intake_article(puts_info)
       if puts_info == 'exit'
       end_now
-    elsif puts_info.to_i > FunnyArticle::Topics.all_hash.count
+    elsif puts_info.to_i > FunnyArticle::Topics.scrape_details.count
       puts ""
       puts "/////////////////Please select a number from the list above//////////////"
       FunnyArticle::CLI.new.begin_now

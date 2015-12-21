@@ -14,36 +14,24 @@ class FunnyArticle::Topics
 
 
   def initialize(description, headline)
-    hash[headline]= description
-    @descriptions = []
-    # @headlines = []
-    article
+    # hash[headline]= description
+    # @descriptions = []
+    # article
   end 
 
-  def self.print_all_topics
-    @@list.each.with_index do |topic,index|
-      puts "#{index+1}: #{topic.keys[0]}"
-    end
+  def self.list
+    @@list
   end
 
   def self.all_hash
-    # binding.pry
     scrape_details
-    # @@collection 
-    @@articles 
   end 
 
-  def self.intake(puts_info)
-    if puts_info == 'exit'
-      end_now
-    end
+  def self.select_hash(puts_info)
     @@correct_hash = @@list[puts_info.to_i - 1]
   end
 
-  def self.intake_article(puts_info)
-    if puts_info == 'exit'
-      end_now
-    else 
+  def self.return_article(puts_info)
     doc = Nokogiri::HTML(open(@@correct_hash.values[0]))
     article_links = []
     doc.css('.large-thing h2 a').map do |link| 
@@ -52,8 +40,11 @@ class FunnyArticle::Topics
     url = article_links[puts_info.to_i - 1]
     new_doc = Nokogiri::HTML(open(url))
     
-    new_doc.css('.content-text p').text
-    end 
+    array = []
+    new_doc.css('.content-media .image') ? array << "Image" : array << "No Image"
+    new_doc.css('.content-text').text.strip == '' ? array << "No article provided" : array << new_doc.css('.content-text').text.strip
+    
+    array.join("\n----------------------------\n")
   end
   
 
@@ -69,14 +60,15 @@ public
     scrape = doc.css('.large-thing')
     scrape.css('.inner').each do |div|
       @@article = {}
-      header = div.css("h2")
-      description = div.css('.desc')
-      @@article["header"] = header.text.strip
-      @@article["description"] = description.text.strip
+      header = div.css("h2").text.strip
+      description = div.css('.desc').text.strip
+      if description == ""
+        description = "no description provided"
+      end
+      @@article["header"] = header
+      @@article["description"] = description
       @@articles << @@article
-      @@articles
-      # binding.pry
     end
-  end 
-
+    @@articles
+  end
 end 

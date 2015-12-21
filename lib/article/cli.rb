@@ -12,7 +12,7 @@ class FunnyArticle::CLI
   def list 
     puts ""
     puts "************* Current topics *************" 
-    FunnyArticle::Topics.print_all_topics
+    print_all_topics
     puts ""
   end 
 
@@ -26,9 +26,8 @@ class FunnyArticle::CLI
       puts "Enter 'exit' to quit."
       puts ""
       
-      FunnyArticle::Topics.intake(gets.strip)
-      FunnyArticle::Topics.all_hash.each.with_index do |heck_yea, i|
-        # binding.pry
+      intake(gets.strip)
+      FunnyArticle::Topics.scrape_details.each.with_index do |heck_yea, i|
         puts "#{i+1}: #{heck_yea['header']}"
         puts ""
         puts "Description: #{heck_yea['description']}"
@@ -39,13 +38,42 @@ class FunnyArticle::CLI
       puts ""
       puts "Enter 'exit' to quit."
       puts ""
-      puts "#{FunnyArticle::Topics.intake_article(gets.strip)}"
+      puts "#{intake_article(gets.strip)}"
       puts "**************************"
       puts ""
       restart
       exit
     end
   end 
+
+    def print_all_topics
+    FunnyArticle::Topics.list.each.with_index do |topic,index|
+      puts "#{index+1}: #{topic.keys[0]}"
+    end
+  end
+
+  def intake_article(puts_info)
+      if puts_info == 'exit'
+      end_now
+    elsif puts_info.to_i > FunnyArticle::Topics.all_hash.count
+      puts ""
+      puts "/////////////////Please select a number from the list above//////////////"
+      FunnyArticle::CLI.new.begin_now
+    end 
+      FunnyArticle::Topics.return_article(puts_info)
+  end 
+
+  def intake(puts_info)
+    if puts_info == 'exit'
+      puts 'GoodBye!!!!'
+      exit
+    elsif puts_info.to_i > FunnyArticle::Topics.list.count
+      puts ""
+      puts "///////////Please select a number from the list above//////////////"
+      FunnyArticle::CLI.new.begin_now
+    end 
+      FunnyArticle::Topics.select_hash(puts_info)
+  end
 
   def restart
     puts "Would you like to restart? Enter y/n"

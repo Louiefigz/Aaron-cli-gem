@@ -5,10 +5,6 @@ end
 
 class FunnyArticle::CLI
 
-  def call
-    list
-  end
-
   def list 
     puts ""
     puts "************* Current topics *************" 
@@ -27,7 +23,7 @@ class FunnyArticle::CLI
       puts ""
       
       intake(gets.strip)
-      FunnyArticle::Topics.scrape_details.each.with_index do |heck_yea, i|
+      FunnyArticle::Article.scrape_details.each.with_index do |heck_yea, i|
         puts "#{i+1}: #{heck_yea['header']}"
         puts ""
         puts "Description: #{heck_yea['description']}"
@@ -54,13 +50,14 @@ class FunnyArticle::CLI
 
   def intake_article(puts_info)
       if puts_info == 'exit'
-      end_now
-    elsif puts_info.to_i > FunnyArticle::Topics.scrape_details.count
+      puts "Goodbye!!!!!"
+      exit
+    elsif puts_info.to_i > FunnyArticle::Article.scrape_details.count
       puts ""
       puts "/////////////////Please select a number from the list above//////////////"
       FunnyArticle::CLI.new.begin_now
     end 
-      FunnyArticle::Topics.return_article(puts_info)
+      FunnyArticle::Article.return_article(puts_info)
   end 
 
   def intake(puts_info)
@@ -72,6 +69,7 @@ class FunnyArticle::CLI
       puts "///////////Please select a number from the list above//////////////"
       FunnyArticle::CLI.new.begin_now
     end 
+    # binding.pry
       FunnyArticle::Article.select_hash(puts_info)
   end
 

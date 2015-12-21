@@ -72,7 +72,7 @@ class FunnyArticle::CLI
       puts "///////////Please select a number from the list above//////////////"
       FunnyArticle::CLI.new.begin_now
     end 
-      FunnyArticle::Topics.select_hash(puts_info)
+      FunnyArticle::Article.select_hash(puts_info)
   end
 
   def restart
